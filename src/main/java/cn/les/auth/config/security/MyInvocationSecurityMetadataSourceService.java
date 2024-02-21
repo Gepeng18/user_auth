@@ -36,6 +36,10 @@ public class MyInvocationSecurityMetadataSourceService implements FilterInvocati
 
     private final Map<String, Set<PermissionDO>> rolePermissionMap = new HashMap<>();
 
+    /**
+     * 首先根据角色查询有哪些权限，权限包括 path 和 method
+     * 再判断当前的request是否符合权限列表的path和method，符合则return true 即可
+     */
     @Override
     public Collection<ConfigAttribute> getAttributes(Object o) throws IllegalArgumentException {
         HttpServletRequest request = ((FilterInvocation) o).getHttpRequest();
@@ -77,6 +81,9 @@ public class MyInvocationSecurityMetadataSourceService implements FilterInvocati
         return true;
     }
 
+    /**
+     * 根据角色-菜单，菜单-权限 的映射关系，获取角色有哪些权限
+     */
     public void initRolePermissionMap() {
         List<RoleDO> roleDOList = roleDao.findAll();
         Map<Long, String> idRoleMap = new HashMap<>();
